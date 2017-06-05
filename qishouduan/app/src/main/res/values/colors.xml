@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F6564A</color>
-    <color name="colorPrimaryDark">#F6564A</color>
-    <color name="colorAccent">#F6564A</color>
+    <color name="colorPrimary">#F55549</color>
+    <color name="colorPrimaryDark">#F55549</color>
+    <color name="colorAccent">#F55549</color>
     <color name="appwhite">#ffffff</color>
-    <color name="ColorLine">#E4E5E6</color>
-    <color name="ColorDrank">#F6F6F6</color>
-    <color name="ColorBlcak">#000000</color>
+    <color name="ColorLine">#e6e6e6</color>
+    <color name="ColorTextDrank">#909090</color>
+    <color name="ColorTextBlcak">#323232</color>
     <color name="ColorYellow">#F49427</color>
     <color name="ColorTransparent">#00000000</color>
+    <color name="ColorBlack">#f5f5f5</color>
 
 </resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+
+    <tab
+        activeColor="#F6564A"
+        icon="@drawable/select_home_tab"
+        id="@+id/tab_home"
+        inActiveColor="#616161"
+        title="订单"/>
+    <tab
+        activeColor="#F6564A"
+        icon="@drawable/select_center_tab"
+        id="@+id/tab_personal_center"
+        inActiveColor="#616161"
+        title="我的"/>
+
+</tabs>

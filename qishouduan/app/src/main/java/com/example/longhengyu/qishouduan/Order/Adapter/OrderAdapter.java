@@ -1,11 +1,14 @@
 package com.example.longhengyu.qishouduan.Order.Adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.longhengyu.qishouduan.Order.Bean.OrderListBean;
+import com.example.longhengyu.qishouduan.Order.Interface.OrderListInterface;
 import com.example.longhengyu.qishouduan.R;
 
 import java.util.List;
@@ -19,6 +22,15 @@ import butterknife.ButterKnife;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
 
+    List<OrderListBean> mList;
+    Context mContext;
+    OrderListInterface mInterface;
+
+    public  OrderAdapter(List<OrderListBean> list,Context context,OrderListInterface orderListInterface){
+        mList = list;
+        mContext = context;
+        mInterface = orderListInterface;
+    }
 
 
     @Override
@@ -30,13 +42,25 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        OrderListBean bean = mList.get(position);
+        holder.mTextOrderListItemOrderNum.setText("订单号:"+bean.getName());
+        holder.mTextOrderListItemAddress.setText("取餐地址:"+bean.getAddress());
+        holder.mTextOrderListItemFootTime.setText("用餐时间:"+bean.getFootTime());
+        holder.mTextOrderListItemOrderTime.setText("下单时间:"+bean.getOrderTime());
+        holder.mTextOrderListItemPrice.setText("¥"+bean.getPrice());
+        holder.selfView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mInterface.onClickOrderList(position);
+            }
+        });
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -52,8 +76,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         @BindView(R.id.text_orderList_item_price)
         TextView mTextOrderListItemPrice;
 
+        View selfView;
+
         public ViewHolder(View itemView) {
             super(itemView);
+            selfView = itemView;
             ButterKnife.bind(this, itemView);
         }
     }

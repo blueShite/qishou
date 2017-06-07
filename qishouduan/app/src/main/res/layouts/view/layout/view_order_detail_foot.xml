@@ -98,18 +98,18 @@
         <Button
             android:id="@+id/button_orderDetail_foot_startGive"
             android:layout_width="120dp"
-            android:layout_height="35dp"
+            android:layout_height="38dp"
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="15dp"
-            android:background="@color/ColorLine"
+            android:background="@drawable/selector_order_detail_give"
             android:text="开始配送"
-            android:textColor="@color/appwhite"
+            android:textColor="@drawable/select_btn_title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            app:layout_constraintTop_toBottomOf="@+id/textView2"/>
     </android.support.constraint.ConstraintLayout>
 
     <TextView

@@ -44,11 +44,22 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         OrderListBean bean = mList.get(position);
-        holder.mTextOrderListItemOrderNum.setText("订单号:"+bean.getName());
-        holder.mTextOrderListItemAddress.setText("取餐地址:"+bean.getAddress());
-        holder.mTextOrderListItemFootTime.setText("用餐时间:"+bean.getFootTime());
-        holder.mTextOrderListItemOrderTime.setText("下单时间:"+bean.getOrderTime());
-        holder.mTextOrderListItemPrice.setText("¥"+bean.getPrice());
+        holder.mTextOrderListItemOrderNum.setText("订单号:"+bean.getId());
+        if(bean.getOrderType()==1){
+            holder.mTextOrderListItemAddress.setText("取餐地址:"+bean.getAddress());
+        }else {
+            holder.mTextOrderListItemAddress.setText("送餐地址:"+bean.getAddress());
+        }
+        holder.mTextOrderListItemFootTime.setText("下单时间:"+bean.getAdd_time());
+        holder.mTextOrderListItemOrderTime.setText("用餐时间:"+bean.getDiner_time());
+        if(bean.getOrderType()==2){
+            holder.mTextOrderListItemPrice.setVisibility(View.GONE);
+
+        }else {
+            holder.mTextOrderListItemPrice.setVisibility(View.VISIBLE);
+            holder.mTextOrderListItemPrice.setText("¥"+bean.getDelivery());
+        }
+
         holder.selfView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

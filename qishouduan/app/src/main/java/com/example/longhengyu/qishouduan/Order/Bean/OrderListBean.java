@@ -6,18 +6,35 @@ package com.example.longhengyu.qishouduan.Order.Bean;
 
 public class OrderListBean {
 
-    String name;
-    String address;
-    String orderTime;
-    String footTime;
-    String price;
 
-    public String getName() {
-        return name;
+    /**
+     * address : 中原万达
+     * add_time : 2017-06-08 13:15:12
+     * id : 1608031315124954
+     * diner_time : 12:00
+     */
+
+    private String address;
+    private String add_time;
+    private String id;
+    private String diner_time;
+    private int orderType;
+    private String delivery;
+
+    public String getDelivery() {
+        return delivery;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDelivery(String delivery) {
+        this.delivery = delivery;
+    }
+
+    public int getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(int orderType) {
+        this.orderType = orderType;
     }
 
     public String getAddress() {
@@ -28,27 +45,27 @@ public class OrderListBean {
         this.address = address;
     }
 
-    public String getOrderTime() {
-        return orderTime;
+    public String getAdd_time() {
+        return add_time;
     }
 
-    public void setOrderTime(String orderTime) {
-        this.orderTime = orderTime;
+    public void setAdd_time(String add_time) {
+        this.add_time = add_time;
     }
 
-    public String getFootTime() {
-        return footTime;
+    public String getId() {
+        return id;
     }
 
-    public void setFootTime(String footTime) {
-        this.footTime = footTime;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getPrice() {
-        return price;
+    public String getDiner_time() {
+        return diner_time;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setDiner_time(String diner_time) {
+        this.diner_time = diner_time;
     }
 }

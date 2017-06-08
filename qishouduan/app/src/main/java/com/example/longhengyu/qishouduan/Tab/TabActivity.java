@@ -41,14 +41,16 @@ public class TabActivity extends SupportActivity {
 
     private void injectPages() {
 
-        orderFragment = findFragment(OrderFragment.class);
+        /*orderFragment = findFragment(OrderFragment.class);
         if(orderFragment==null){
             orderFragment = OrderFragment.newInstance();
         }
         myFragment = findFragment(MyFragment.class);
         if(myFragment==null){
             myFragment = MyFragment.newInstance();
-        }
+        }*/
+        orderFragment = OrderFragment.newInstance();
+        myFragment = MyFragment.newInstance();
         loadMultipleRootFragment(R.id.contentView,0,orderFragment,myFragment);
 
     }

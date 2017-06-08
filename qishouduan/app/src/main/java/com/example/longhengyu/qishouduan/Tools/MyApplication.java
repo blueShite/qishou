@@ -22,11 +22,11 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
-        /*OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L, TimeUnit.MILLISECONDS)
                 .build();
-        OkHttpUtils.initClient(okHttpClient);*/
+        OkHttpUtils.initClient(okHttpClient);
 
     }
 

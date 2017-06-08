@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import com.example.longhengyu.qishouduan.Base.BaseActivity;
 import com.example.longhengyu.qishouduan.Order.Adapter.OrderDetailAdapter;
 import com.example.longhengyu.qishouduan.Order.Bean.OrderDetailBean;
+import com.example.longhengyu.qishouduan.Order.Interface.OrderDetailInterface;
+import com.example.longhengyu.qishouduan.Order.Presenter.OrderDetailPresenter;
 import com.example.longhengyu.qishouduan.R;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
@@ -20,14 +22,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OrderDetailActivity extends BaseActivity {
+public class OrderDetailActivity extends BaseActivity implements OrderDetailInterface {
 
     @BindView(R.id.orderDetail_recycle)
     RecyclerView orderDetailRecycle;
     @BindView(R.id.orderDetail_refresh)
     TwinklingRefreshLayout orderDetailRefresh;
 
+    private String orderId;
     private List<OrderDetailBean> mList;
+    private OrderDetailPresenter mPresenter = new OrderDetailPresenter(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,9 @@ public class OrderDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_order_detail);
         ButterKnife.bind(this);
         initView();
+        orderId = getIntent().getStringExtra("orderId");
+        mPresenter.setContext(OrderDetailActivity.this);
+        mPresenter.requestDetailData(orderId);
     }
 
     private void initView(){
@@ -69,5 +76,15 @@ public class OrderDetailActivity extends BaseActivity {
                 orderDetailRefresh.finishRefreshing();
             }
         });
+    }
+
+    @Override
+    public void requestDetailSucess() {
+
+    }
+
+    @Override
+    public void requestDetailError(String errorStr) {
+
     }
 }

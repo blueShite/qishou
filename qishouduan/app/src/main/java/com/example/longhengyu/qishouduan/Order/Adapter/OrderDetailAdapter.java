@@ -27,6 +27,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
     private View headerView;
     private View footView;
 
+
     public OrderDetailAdapter(List<OrderDetailBean> list, Context context) {
         mList = list;
         mContext = context;

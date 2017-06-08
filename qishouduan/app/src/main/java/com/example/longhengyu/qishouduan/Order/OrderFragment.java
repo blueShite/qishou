@@ -14,6 +14,7 @@ import android.widget.CheckedTextView;
 import com.example.longhengyu.qishouduan.Order.Adapter.OrderAdapter;
 import com.example.longhengyu.qishouduan.Order.Bean.OrderListBean;
 import com.example.longhengyu.qishouduan.Order.Interface.OrderListInterface;
+import com.example.longhengyu.qishouduan.Order.Presenter.OrderListPresenter;
 import com.example.longhengyu.qishouduan.R;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
@@ -52,7 +53,9 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
     TwinklingRefreshLayout orderRefresh;
 
     private OrderAdapter orderAdapter;
-    private List<OrderListBean> beanList;
+    private List<OrderListBean> mList;
+    private OrderListPresenter mPresenter = new OrderListPresenter(this);
+    private String orderTypeStr;
 
 
     public static OrderFragment newInstance() {
@@ -72,24 +75,23 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
         checkTextOrderTake.setChecked(true);
         takeLine.setVisibility(View.VISIBLE);
         initView();
+        mPresenter.setContext(getActivity());
+        orderTypeStr = "1";
         return view;
+    }
+
+    @Override
+    public void onSupportVisible() {
+        super.onSupportVisible();
+        mPresenter.requestOrderList("6",orderTypeStr);
     }
 
     private void initView() {
 
-        beanList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            OrderListBean bean = new OrderListBean();
-            bean.setName("123456");
-            bean.setAddress("花园路北三环");
-            bean.setPrice("11.1");
-            bean.setFootTime("2017-06-06 11:11:11");
-            bean.setOrderTime("2017-06-06 11:11:11");
-            beanList.add(bean);
-        }
+        mList = new ArrayList<>();
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         orderRecycler.setLayoutManager(manager);
-        orderAdapter = new OrderAdapter(beanList, getContext(),this);
+        orderAdapter = new OrderAdapter(mList, getContext(),this);
         orderRecycler.setAdapter(orderAdapter);
 
         //定制刷新加载
@@ -103,7 +105,7 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
         orderRefresh.setOnRefreshListener(new RefreshListenerAdapter(){
             @Override
             public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
-                orderRefresh.finishRefreshing();
+                mPresenter.requestOrderList("6",orderTypeStr);
             }
 
             @Override
@@ -135,6 +137,8 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
                 takeLine.setVisibility(View.VISIBLE);
                 giveLine.setVisibility(View.INVISIBLE);
                 successLine.setVisibility(View.INVISIBLE);
+                orderTypeStr = "1";
+                mPresenter.requestOrderList("6",orderTypeStr);
                 break;
             case R.id.checkText_order_give:
                 checkTextOrderTake.setChecked(false);
@@ -143,6 +147,8 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
                 takeLine.setVisibility(View.INVISIBLE);
                 giveLine.setVisibility(View.VISIBLE);
                 successLine.setVisibility(View.INVISIBLE);
+                orderTypeStr = "2";
+                mPresenter.requestOrderList("6",orderTypeStr);
                 break;
             case R.id.checkText_order_success:
                 checkTextOrderTake.setChecked(false);
@@ -151,6 +157,8 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
                 takeLine.setVisibility(View.INVISIBLE);
                 giveLine.setVisibility(View.INVISIBLE);
                 successLine.setVisibility(View.VISIBLE);
+                orderTypeStr = "3";
+                mPresenter.requestOrderList("6",orderTypeStr);
                 break;
         }
     }
@@ -158,6 +166,25 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
     @Override
     public void onClickOrderList(int index) {
         Intent intent = new Intent(getActivity(),OrderDetailActivity.class);
+        intent.putExtra("orderId",mList.get(index).getId());
         startActivity(intent);
+    }
+
+    @Override
+    public void requestOrderListSucess(String orderType, List<OrderListBean> beanList) {
+
+        orderRefresh.finishRefreshing();
+        mList.clear();
+        mList.addAll(beanList);
+        orderAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void requestOrderListError(String errorStr) {
+
+        orderRefresh.finishRefreshing();
+        mList.clear();
+        orderAdapter.notifyDataSetChanged();
     }
 }

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.example.longhengyu.qishouduan.Base.BaseActivity;
 import com.example.longhengyu.qishouduan.Order.Adapter.OrderDetailAdapter;
@@ -29,6 +31,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailInte
     @BindView(R.id.orderDetail_refresh)
     TwinklingRefreshLayout orderDetailRefresh;
 
+    private ImageView backImageView;
     private String orderId;
     private List<OrderDetailBean> mList;
     private OrderDetailPresenter mPresenter = new OrderDetailPresenter(this);
@@ -74,6 +77,13 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailInte
             @Override
             public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
                 orderDetailRefresh.finishRefreshing();
+            }
+        });
+        backImageView = (ImageView)findViewById(R.id.imageView_orderDetail_back);
+        backImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

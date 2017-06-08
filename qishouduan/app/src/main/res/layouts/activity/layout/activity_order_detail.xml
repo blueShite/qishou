@@ -26,6 +26,13 @@
             android:textColor="@color/appwhite"
             android:textSize="@dimen/bigText" />
 
+        <ImageView
+            android:id="@+id/imageView_orderDetail_back"
+            android:layout_gravity="left"
+            android:layout_width="40dp"
+            android:src="@drawable/nav_arrow"
+            android:layout_height="25dp" />
+
     </android.support.v7.widget.Toolbar>
 
     <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout

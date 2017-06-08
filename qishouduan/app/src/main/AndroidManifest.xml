@@ -28,15 +28,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".Tab.TabActivity">
+        <activity android:name=".MainActivity" />
+        <activity android:name=".Tab.TabActivity"></activity>
+        <activity android:name=".Order.OrderDetailActivity" />
+        <activity android:name=".Login.LoginActivity">
+
+        </activity>
+        <activity android:name=".Splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Order.OrderDetailActivity"></activity>
     </application>
 
 </manifest>

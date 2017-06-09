@@ -3,12 +3,14 @@ package com.example.longhengyu.qishouduan.Splash;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.example.longhengyu.qishouduan.Login.Bean.LoginBean;
 import com.example.longhengyu.qishouduan.Login.LoginActivity;
+import com.example.longhengyu.qishouduan.Manage.LoginManage;
 import com.example.longhengyu.qishouduan.R;
+import com.example.longhengyu.qishouduan.Tab.TabActivity;
 import com.squareup.picasso.Picasso;
 
 public class SplashActivity extends Activity {
@@ -33,7 +35,14 @@ public class SplashActivity extends Activity {
 
     private void enterHomeActivity(){
 
-        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+        LoginBean loginBean = LoginManage.getInstance().getLoginBean();
+        if(loginBean==null||loginBean.getId().isEmpty()){
+            Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+        Intent intent = new Intent(SplashActivity.this,TabActivity.class);
         startActivity(intent);
         finish();
 

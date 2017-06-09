@@ -33,8 +33,9 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailInte
 
     private ImageView backImageView;
     private String orderId;
-    private List<OrderDetailBean> mList;
     private OrderDetailPresenter mPresenter = new OrderDetailPresenter(this);
+    private OrderDetailBean mDetailBean;
+    private List<OrderDetailBean.FootBean> mFootBeanList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,24 +50,10 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailInte
 
     private void initView(){
 
-        mList = new ArrayList<>();
-        for (int i=0;i<5;i++){
-            OrderDetailBean bean = new OrderDetailBean();
-            if(i==1){
-                bean.setBtnType(true);
-            }else {
-                bean.setBtnType(false);
-            }
-            bean.setFoot("鱼香肉丝");
-            bean.setFootType("农家小炒");
-            mList.add(bean);
-        }
-        mList.add(0,new OrderDetailBean());
-        mList.add(new OrderDetailBean());
+
         LinearLayoutManager manager = new LinearLayoutManager(OrderDetailActivity.this);
         orderDetailRecycle.setLayoutManager(manager);
-        OrderDetailAdapter adapter = new OrderDetailAdapter(mList,OrderDetailActivity.this);
-        orderDetailRecycle.setAdapter(adapter);
+
         //定制刷新加载
         SinaRefreshView headerView = new SinaRefreshView(OrderDetailActivity.this);
         headerView.setArrowResource(R.drawable.arrow);
@@ -76,7 +63,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailInte
         orderDetailRefresh.setOnRefreshListener(new RefreshListenerAdapter(){
             @Override
             public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
-                orderDetailRefresh.finishRefreshing();
+                mPresenter.requestDetailData(orderId);
             }
         });
         backImageView = (ImageView)findViewById(R.id.imageView_orderDetail_back);
@@ -88,9 +75,19 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailInte
         });
     }
 
-    @Override
-    public void requestDetailSucess() {
 
+    @Override
+    public void requestDetailSucess(OrderDetailBean detailBean) {
+
+
+        orderDetailRefresh.finishRefreshing();
+        mDetailBean = detailBean;
+        mFootBeanList = detailBean.getFoot();
+        OrderDetailBean.FootBean bean = new OrderDetailBean.FootBean();
+        mFootBeanList.add(0,bean);
+        mFootBeanList.add(bean);
+        OrderDetailAdapter adapter = new OrderDetailAdapter(detailBean.getFoot(),detailBean,OrderDetailActivity.this);
+        orderDetailRecycle.setAdapter(adapter);
     }
 
     @Override

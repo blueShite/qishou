@@ -2,10 +2,12 @@ package com.example.longhengyu.qishouduan.Order.Presenter;
 
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
 import com.example.longhengyu.qishouduan.Base.BasePresenter;
 import com.example.longhengyu.qishouduan.NetWorks.RequestBean;
 import com.example.longhengyu.qishouduan.NetWorks.RequestCallBack;
 import com.example.longhengyu.qishouduan.NetWorks.RequestTools;
+import com.example.longhengyu.qishouduan.Order.Bean.OrderDetailBean;
 import com.example.longhengyu.qishouduan.Order.Interface.OrderDetailInterface;
 
 import java.util.HashMap;
@@ -36,6 +38,7 @@ public class OrderDetailPresenter extends BasePresenter {
             @Override
             public void onError(Call call, Exception e, int id) {
                 dismissDialog();
+                mInterface.requestDetailError("请求失败");
                 super.onError(call, e, id);
             }
 
@@ -44,8 +47,10 @@ public class OrderDetailPresenter extends BasePresenter {
                 dismissDialog();
                 super.onResponse(response, id);
                 if(response.isRes()){
-                    Log.e("数据",response.getData());
+                    OrderDetailBean bean = JSON.parseObject(response.getData(),OrderDetailBean.class);
+                    mInterface.requestDetailSucess(bean);
                 }else {
+                    mInterface.requestDetailError(response.getMes());
                     Toasty.error(mContext,response.getMes()).show();
                 }
             }

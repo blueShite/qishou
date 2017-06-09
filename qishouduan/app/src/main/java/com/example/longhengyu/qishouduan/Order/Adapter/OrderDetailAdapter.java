@@ -22,14 +22,21 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
 
 
 
-    private List<OrderDetailBean> mList;
+    private List<OrderDetailBean.FootBean> mList;
+    private OrderDetailBean mDetailBean;
     private Context mContext;
     private View headerView;
     private View footView;
 
 
-    public OrderDetailAdapter(List<OrderDetailBean> list, Context context) {
+    public OrderDetailAdapter(List<OrderDetailBean.FootBean> list,OrderDetailBean detailBean, Context context) {
         mList = list;
+        if(list.size()>0){
+            OrderDetailBean.FootBean bean = new OrderDetailBean.FootBean();
+            mList.add(0,bean);
+            mList.add(bean);
+        }
+        mDetailBean = detailBean;
         mContext = context;
     }
 
@@ -66,25 +73,63 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if(position==0){
+            if(mDetailBean.getOrder().getDispatching().equals("1")){
+                holder.mTextOrderDetailOrderStatus.setText("订单领取中");
+            }
+            if(mDetailBean.getOrder().getDispatching().equals("2")){
+                holder.mTextOrderDetailOrderStatus.setText("订单派送中");
+            }
+            if(mDetailBean.getOrder().getDispatching().equals("3")){
+                holder.mTextOrderDetailOrderStatus.setText("订单已完成");
+            }
+            holder.mTextOrderDetailOrderNum.setText("订单号:"+mDetailBean.getOrder().getId());
+            holder.mTextOrderDetailOrderTime.setText("下单时间:"+mDetailBean.getOrder().getAdd_time());
+            holder.mTextOrderDetailOrderFeel.setText("¥"+mDetailBean.getOrder().getDelivery());
             return;
         }
         if(position==mList.size()-1){
-            holder.mConLayoutOrderDetailFootGive.setVisibility(View.VISIBLE);
-            holder.mButtonOrderDetailFootStartGive.setSelected(true);
+            holder.mTextOrderDetailFootAddress.setText(mDetailBean.getUser().getAddress());
+            holder.mTextOrderDetailFootPhone.setText(mDetailBean.getUser().getPhone());
+            holder.mTextOrderDetailFootName.setText(mDetailBean.getUser().getName());
+            if(mDetailBean.getOrder().getDispatching().equals("1")){
+
+                holder.mConLayoutOrderDetailFootGive.setVisibility(View.VISIBLE);
+                holder.mButtonOrderDetailFootStartGive.setSelected(true);
+            }else {
+                holder.mConLayoutOrderDetailFootGive.setVisibility(View.GONE);
+                holder.mButtonOrderDetailFootStartGive.setSelected(false);
+            }
+            holder.mButtonOrderDetailFootStartGive.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(holder.mButtonOrderDetailFootStartGive.isSaveEnabled()){
+
+                    }
+                }
+            });
             return;
         }
 
-        OrderDetailBean bean = mList.get(position);
-        holder.mTextOrderDetailFootType.setText(bean.getFootType());
-        holder.mTextOrderDetailName.setText(bean.getFoot());
-        holder.mButtonOrderDetailItem.setSelected(bean.getBtnType());
-        if(bean.getBtnType()){
-            holder.mButtonOrderDetailItem.setText("待取餐");
-        }else {
+        OrderDetailBean.FootBean bean = mList.get(position);
+        holder.mTextOrderDetailFootType.setText(mDetailBean.getOrder().getWicket());
+        holder.mTextOrderDetailName.setText(bean.getDish());
+        if(bean.getDish_id().equals("1")){
+            holder.mButtonOrderDetailItem.setSelected(false);
             holder.mButtonOrderDetailItem.setText("已取餐");
+        }else {
+            holder.mButtonOrderDetailItem.setSelected(true);
+            holder.mButtonOrderDetailItem.setText("待取餐");
         }
+        holder.mButtonOrderDetailItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(holder.mButtonOrderDetailItem.isSelected()){
+
+                }
+            }
+        });
     }
 
     @Override
@@ -94,23 +139,16 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        /*//headerView
-        @BindView(R.id.text_orderDetail_orderTime)
+        //headerView
         TextView mTextOrderDetailOrderTime;
-        @BindView(R.id.text_orderDetail_orderNum)
         TextView mTextOrderDetailOrderNum;
-        @BindView(R.id.text_orderDetail_orderFeel)
         TextView mTextOrderDetailOrderFeel;
-        @BindView(R.id.text_orderDetail_orderStatus)
         TextView mTextOrderDetailOrderStatus;
 
         //footView
-        @BindView(R.id.text_orderDetail_foot_address)
         TextView mTextOrderDetailFootAddress;
-        @BindView(R.id.text_orderDetail_foot_phone)
         TextView mTextOrderDetailFootPhone;
-        @BindView(R.id.text_orderDetail_foot_name)
-        TextView mTextOrderDetailFootName;*/
+        TextView mTextOrderDetailFootName;
         Button mButtonOrderDetailFootStartGive;
         ConstraintLayout mConLayoutOrderDetailFootGive;
 
@@ -122,9 +160,16 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         public ViewHolder(View itemView) {
             super(itemView);
             if(itemView==headerView){
+                mTextOrderDetailOrderStatus = (TextView)itemView.findViewById(R.id.text_orderDetail_orderStatus);
+                mTextOrderDetailOrderFeel = (TextView)itemView.findViewById(R.id.text_orderDetail_orderFeel);
+                mTextOrderDetailOrderNum = (TextView)itemView.findViewById(R.id.text_orderDetail_orderNum);
+                mTextOrderDetailOrderTime = (TextView)itemView.findViewById(R.id.text_orderDetail_orderTime);
                 return;
             }
             if(itemView==footView){
+                mTextOrderDetailFootAddress = (TextView)itemView.findViewById(R.id.text_orderDetail_foot_address);
+                mTextOrderDetailFootPhone = (TextView)itemView.findViewById(R.id.text_orderDetail_foot_phone);
+                mTextOrderDetailFootName = (TextView)itemView.findViewById(R.id.text_orderDetail_foot_name) ;
                 mConLayoutOrderDetailFootGive = (ConstraintLayout)itemView.findViewById(R.id.conLayout_orderDetail_foot_give);
                 mButtonOrderDetailFootStartGive = (Button)itemView.findViewById(R.id.button_orderDetail_foot_startGive);
                 return;
@@ -133,7 +178,6 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             mButtonOrderDetailItem = (Button)itemView.findViewById(R.id.button_orderDetail_item);
             mTextOrderDetailFootType = (TextView)itemView.findViewById(R.id.text_orderDetail_footType);
             mTextOrderDetailName = (TextView)itemView.findViewById(R.id.text_orderDetail_name);
-
         }
     }
 }

@@ -104,7 +104,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             holder.mButtonOrderDetailFootStartGive.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(holder.mButtonOrderDetailFootStartGive.isSaveEnabled()){
+                    if(holder.mButtonOrderDetailFootStartGive.isSelected()){
 
                     }
                 }

@@ -10,7 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.example.longhengyu.qishouduan.Login.Bean.LoginBean;
+import com.example.longhengyu.qishouduan.Manage.LoginManage;
 import com.example.longhengyu.qishouduan.Order.Adapter.OrderAdapter;
 import com.example.longhengyu.qishouduan.Order.Bean.OrderListBean;
 import com.example.longhengyu.qishouduan.Order.Interface.OrderListInterface;
@@ -51,11 +55,16 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
     View successLine;
     @BindView(R.id.order_refresh)
     TwinklingRefreshLayout orderRefresh;
+    @BindView(R.id.text_order_online)
+    TextView mTextOrderOnline;
+    @BindView(R.id.layout_order_onLine)
+    RelativeLayout mLayoutOrderOnLine;
 
     private OrderAdapter orderAdapter;
     private List<OrderListBean> mList;
     private OrderListPresenter mPresenter = new OrderListPresenter(this);
     private String orderTypeStr;
+    private String personId = LoginManage.getInstance().getLoginBean().getId();
 
 
     public static OrderFragment newInstance() {
@@ -83,15 +92,30 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
     @Override
     public void onSupportVisible() {
         super.onSupportVisible();
-        mPresenter.requestOrderList("6",orderTypeStr);
+
+        if (LoginManage.getInstance().getLoginBean().getWhether().equals("1")) {
+            mPresenter.requestOrderList(personId, orderTypeStr);
+            mLayoutOrderOnLine.setVisibility(View.GONE);
+            mTextOrderOnline.setVisibility(View.VISIBLE);
+        } else {
+            mLayoutOrderOnLine.setVisibility(View.VISIBLE);
+            mTextOrderOnline.setVisibility(View.GONE);
+        }
+
     }
 
     private void initView() {
 
+        mTextOrderOnline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.requestSetOnline(personId,"2");
+            }
+        });
         mList = new ArrayList<>();
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         orderRecycler.setLayoutManager(manager);
-        orderAdapter = new OrderAdapter(mList, getContext(),this);
+        orderAdapter = new OrderAdapter(mList, getContext(), this);
         orderRecycler.setAdapter(orderAdapter);
 
         //定制刷新加载
@@ -102,10 +126,10 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
 
         LoadingView loadingView = new LoadingView(getContext());
         orderRefresh.setBottomView(loadingView);
-        orderRefresh.setOnRefreshListener(new RefreshListenerAdapter(){
+        orderRefresh.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
             public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
-                mPresenter.requestOrderList("6",orderTypeStr);
+                mPresenter.requestOrderList(personId, orderTypeStr);
             }
 
             @Override
@@ -115,17 +139,12 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
                     public void run() {
                         orderRefresh.finishLoadmore();
                     }
-                },2000);
+                }, 2000);
             }
         });
 
     }
 
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
 
     @OnClick({R.id.checkText_order_take, R.id.checkText_order_give, R.id.checkText_order_success})
     public void onViewClicked(View view) {
@@ -138,7 +157,7 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
                 giveLine.setVisibility(View.INVISIBLE);
                 successLine.setVisibility(View.INVISIBLE);
                 orderTypeStr = "1";
-                mPresenter.requestOrderList("6",orderTypeStr);
+                mPresenter.requestOrderList(personId, orderTypeStr);
                 break;
             case R.id.checkText_order_give:
                 checkTextOrderTake.setChecked(false);
@@ -148,7 +167,7 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
                 giveLine.setVisibility(View.VISIBLE);
                 successLine.setVisibility(View.INVISIBLE);
                 orderTypeStr = "2";
-                mPresenter.requestOrderList("6",orderTypeStr);
+                mPresenter.requestOrderList(personId, orderTypeStr);
                 break;
             case R.id.checkText_order_success:
                 checkTextOrderTake.setChecked(false);
@@ -158,15 +177,22 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
                 giveLine.setVisibility(View.INVISIBLE);
                 successLine.setVisibility(View.VISIBLE);
                 orderTypeStr = "3";
-                mPresenter.requestOrderList("6",orderTypeStr);
+                mPresenter.requestOrderList(personId, orderTypeStr);
                 break;
         }
     }
 
+    @OnClick(R.id.button_order_setOnLine)
+    public void onViewClicked() {
+
+        mPresenter.requestSetOnline(personId, "1");
+
+    }
+
     @Override
     public void onClickOrderList(int index) {
-        Intent intent = new Intent(getActivity(),OrderDetailActivity.class);
-        intent.putExtra("orderId",mList.get(index).getId());
+        Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+        intent.putExtra("orderId", mList.get(index).getId());
         startActivity(intent);
     }
 
@@ -186,5 +212,21 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
         orderRefresh.finishRefreshing();
         mList.clear();
         orderAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void requestSetOnlineSucess(String whether) {
+
+        LoginBean bean = LoginManage.getInstance().getLoginBean();
+        bean.setWhether(whether);
+        LoginManage.getInstance().saveLoginBean(bean);
+        if (bean.getWhether().equals("1")) {
+            mPresenter.requestOrderList(personId, orderTypeStr);
+            mLayoutOrderOnLine.setVisibility(View.GONE);
+            mTextOrderOnline.setVisibility(View.VISIBLE);
+        } else {
+            mLayoutOrderOnLine.setVisibility(View.VISIBLE);
+            mTextOrderOnline.setVisibility(View.GONE);
+        }
     }
 }

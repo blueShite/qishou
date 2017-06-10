@@ -64,4 +64,31 @@ public class OrderListPresenter extends BasePresenter{
         });
     }
 
+    public void requestSetOnline(String Id, final String whether){
+
+        showDialog();
+        Map<String,String> map = new HashMap<>();
+        map.put("id",Id);
+        map.put("whether",whether);
+        RequestTools.getInstance().postRequest("state.api.php", false, map, "", new RequestCallBack(mContext) {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                dismissDialog();
+                super.onError(call, e, id);
+            }
+
+            @Override
+            public void onResponse(RequestBean response, int id) {
+                dismissDialog();
+                super.onResponse(response, id);
+                if(response.isRes()){
+                    mInterface.requestSetOnlineSucess(whether);
+                }else {
+                    Toasty.error(mContext,response.getMes()).show();
+                }
+            }
+        });
+
+    }
+
 }

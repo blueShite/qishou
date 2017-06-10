@@ -6,6 +6,7 @@
     android:background="@color/ColorBlack"
     android:layout_height="match_parent">
 
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar3"
         android:layout_width="0dp"
@@ -304,5 +305,32 @@
         </LinearLayout>
 
     </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_My_onLine"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:background="@color/appwhite"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/my_refresh"
+        app:layout_constraintLeft_toLeftOf="@+id/my_refresh"
+        app:layout_constraintRight_toRightOf="@+id/my_refresh"
+        app:layout_constraintTop_toTopOf="@+id/my_refresh"
+        android:layout_marginTop="0dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.545">
+
+        <Button
+            android:background="@drawable/shape_btn_select"
+            android:id="@+id/button_my_setOnLine"
+            android:textColor="@color/appwhite"
+            android:text="上线"
+            android:layout_width="120dp"
+            android:layout_height="40dp"/>
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -10,4 +10,5 @@ public interface MyInterface {
 
     void requestMySucess(MyBean myBean);
     void requestMyError(String errorStr);
+    void requestSetOnlineSucess(String whether);
 }

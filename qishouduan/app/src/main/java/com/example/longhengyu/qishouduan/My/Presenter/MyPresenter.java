@@ -29,14 +29,40 @@ public class MyPresenter extends BasePresenter {
 
     public void requestMyData(String Id){
 
-        showDialog();
+
         Map<String,String> map = new HashMap<>();
         map.put("id",Id);
         RequestTools.getInstance().postRequest("my_list.api.php", false, map, "", new RequestCallBack(mContext) {
             @Override
             public void onError(Call call, Exception e, int id) {
-                dismissDialog();
                 mInterface.requestMyError("请求失败");
+                super.onError(call, e, id);
+            }
+
+            @Override
+            public void onResponse(RequestBean response, int id) {
+                super.onResponse(response, id);
+                if(response.isRes()){
+                    MyBean bean = JSON.parseObject(response.getData(),MyBean.class);
+                    mInterface.requestMySucess(bean);
+                }else {
+                    Toasty.error(mContext,response.getMes()).show();
+                    mInterface.requestMyError(response.getMes());
+                }
+            }
+        });
+    }
+
+    public void requestSetOnline(String Id, final String whether){
+
+        showDialog();
+        Map<String,String> map = new HashMap<>();
+        map.put("id",Id);
+        map.put("whether",whether);
+        RequestTools.getInstance().postRequest("state.api.php", false, map, "", new RequestCallBack(mContext) {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                dismissDialog();
                 super.onError(call, e, id);
             }
 
@@ -45,11 +71,9 @@ public class MyPresenter extends BasePresenter {
                 dismissDialog();
                 super.onResponse(response, id);
                 if(response.isRes()){
-                    MyBean bean = JSON.parseObject(response.getData(),MyBean.class);
-                    mInterface.requestMySucess(bean);
+                    mInterface.requestSetOnlineSucess(whether);
                 }else {
                     Toasty.error(mContext,response.getMes()).show();
-                    mInterface.requestMyError(response.getMes());
                 }
             }
         });

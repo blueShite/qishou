@@ -15,4 +15,6 @@ public interface OrderListInterface {
     void requestOrderListSucess(String orderType, List<OrderListBean> beanList);
 
     void requestOrderListError(String errorStr);
+
+    void requestSetOnlineSucess(String whether);
 }

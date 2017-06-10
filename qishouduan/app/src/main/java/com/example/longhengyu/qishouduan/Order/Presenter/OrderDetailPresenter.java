@@ -57,5 +57,58 @@ public class OrderDetailPresenter extends BasePresenter {
         });
     }
 
+    public void requestDistributionWith(String orderId , final String disId){
+        showDialog();
+        final Map<String,String> map = new HashMap<>();
+        map.put("id",orderId);
+        map.put("dispatching",disId);
+        RequestTools.getInstance().postRequest("revamp_api.php", false, map, "", new RequestCallBack(mContext) {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                dismissDialog();
+                super.onError(call, e, id);
+            }
+
+            @Override
+            public void onResponse(RequestBean response, int id) {
+                super.onResponse(response, id);
+                if(response.isRes()){
+                    Toasty.success(mContext,"操作成功!").show();
+                    mInterface.requestDistributionSucess(disId);
+                }else {
+                    Toasty.error(mContext,response.getMes()).show();
+                }
+            }
+        });
+    }
+
+    public void requestFootTakeMeal(String orderId, final String dish, String dishId, final int index){
+
+        showDialog();
+        Map<String,String> map = new HashMap<>();
+        map.put("id",orderId);
+        map.put("dish",dish);
+        map.put("dish_id",dishId);
+        RequestTools.getInstance().postRequest("qu_stste.api.php", false, map, "", new RequestCallBack(mContext) {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                dismissDialog();
+                super.onError(call, e, id);
+            }
+
+            @Override
+            public void onResponse(RequestBean response, int id) {
+                dismissDialog();
+                super.onResponse(response, id);
+                if(response.isRes()){
+                    mInterface.requestFootDishId(index);
+                }else {
+                    Toasty.error(mContext,response.getMes()).show();
+                }
+            }
+        });
+
+    }
+
 
 }

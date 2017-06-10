@@ -5,8 +5,11 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.longhengyu.qishouduan.Login.Bean.LoginBean;
+import com.example.longhengyu.qishouduan.Manage.LoginManage;
 import com.example.longhengyu.qishouduan.My.Bean.MyBean;
 import com.example.longhengyu.qishouduan.My.Interface.MyInterface;
 import com.example.longhengyu.qishouduan.My.Presenter.MyPresenter;
@@ -17,6 +20,7 @@ import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.yokeyword.fragmentation.SupportFragment;
 
 /**
@@ -41,10 +45,13 @@ public class MyFragment extends SupportFragment implements MyInterface {
     TextView textOrderMonNum;
     @BindView(R.id.my_refresh)
     TwinklingRefreshLayout myRefresh;
+    @BindView(R.id.layout_My_onLine)
+    RelativeLayout mLayoutMyOnLine;
 
 
     private View view;
     private MyPresenter mPresenter = new MyPresenter(this);
+    private String personId = LoginManage.getInstance().getLoginBean().getId();
 
     public static MyFragment newInstance() {
 
@@ -65,17 +72,23 @@ public class MyFragment extends SupportFragment implements MyInterface {
         return view;
     }
 
-    private void customView(){
+    private void customView() {
         //定制刷新加载
+        textMyOnline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPresenter.requestSetOnline(personId,"2");
+            }
+        });
         SinaRefreshView headerView = new SinaRefreshView(getContext());
         headerView.setArrowResource(R.drawable.arrow);
         headerView.setTextColor(0xff745D5C);
         myRefresh.setHeaderView(headerView);
         myRefresh.setEnableLoadmore(false);
-        myRefresh.setOnRefreshListener(new RefreshListenerAdapter(){
+        myRefresh.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
             public void onRefresh(final TwinklingRefreshLayout refreshLayout) {
-                mPresenter.requestMyData("6");
+                mPresenter.requestMyData(personId);
             }
         });
     }
@@ -83,28 +96,49 @@ public class MyFragment extends SupportFragment implements MyInterface {
     @Override
     public void onSupportVisible() {
         super.onSupportVisible();
-        mPresenter.requestMyData("6");
+        if (LoginManage.getInstance().getLoginBean().getWhether().equals("1")) {
+            mPresenter.requestMyData(personId);
+            mLayoutMyOnLine.setVisibility(View.GONE);
+            textMyOnline.setVisibility(View.VISIBLE);
+        } else {
+            mLayoutMyOnLine.setVisibility(View.VISIBLE);
+            textMyOnline.setVisibility(View.GONE);
+        }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    @OnClick(R.id.button_my_setOnLine)
+    public void onViewClicked() {
+        mPresenter.requestSetOnline(personId, "1");
     }
-
 
     @Override
     public void requestMySucess(MyBean myBean) {
         myRefresh.finishRefreshing();
-        textOrderTodayNum.setText(myBean.getToday_d()+"");
+        textOrderTodayNum.setText(myBean.getToday_d() + "");
         textTodayOrderPrice.setText(myBean.getToday_j());
-        textOrderMonNum.setText(myBean.getMoon_d()+"");
+        textOrderMonNum.setText(myBean.getMoon_d() + "");
         textOrderMonPrice.setText(myBean.getMoon_j());
-        textOrderWeekNum.setText(myBean.getWeek_d()+"");
+        textOrderWeekNum.setText(myBean.getWeek_d() + "");
         textOrderWeekPrice.setText(myBean.getWeek_j());
     }
 
     @Override
     public void requestMyError(String errorStr) {
         myRefresh.finishRefreshing();
+    }
+
+    @Override
+    public void requestSetOnlineSucess(String whether) {
+        LoginBean bean = LoginManage.getInstance().getLoginBean();
+        bean.setWhether(whether);
+        LoginManage.getInstance().saveLoginBean(bean);
+        if (LoginManage.getInstance().getLoginBean().getWhether().equals("1")) {
+            mPresenter.requestMyData(personId);
+            mLayoutMyOnLine.setVisibility(View.GONE);
+            textMyOnline.setVisibility(View.VISIBLE);
+        } else {
+            mLayoutMyOnLine.setVisibility(View.VISIBLE);
+            textMyOnline.setVisibility(View.GONE);
+        }
     }
 }

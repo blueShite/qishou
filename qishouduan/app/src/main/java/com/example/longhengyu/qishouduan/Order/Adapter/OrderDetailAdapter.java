@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.longhengyu.qishouduan.Order.Bean.OrderDetailBean;
+import com.example.longhengyu.qishouduan.Order.Interface.OrderDetailInterface;
 import com.example.longhengyu.qishouduan.R;
 
 import java.util.List;
@@ -25,17 +27,14 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
     private List<OrderDetailBean.FootBean> mList;
     private OrderDetailBean mDetailBean;
     private Context mContext;
+    private OrderDetailInterface mInterface;
     private View headerView;
     private View footView;
 
 
-    public OrderDetailAdapter(List<OrderDetailBean.FootBean> list,OrderDetailBean detailBean, Context context) {
+    public OrderDetailAdapter(List<OrderDetailBean.FootBean> list, OrderDetailBean detailBean, Context context, OrderDetailInterface detailInterface) {
         mList = list;
-        if(list.size()>0){
-            OrderDetailBean.FootBean bean = new OrderDetailBean.FootBean();
-            mList.add(0,bean);
-            mList.add(bean);
-        }
+        mInterface = detailInterface;
         mDetailBean = detailBean;
         mContext = context;
     }
@@ -73,7 +72,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         if(position==0){
             if(mDetailBean.getOrder().getDispatching().equals("1")){
                 holder.mTextOrderDetailOrderStatus.setText("订单领取中");
@@ -94,19 +93,46 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             holder.mTextOrderDetailFootPhone.setText(mDetailBean.getUser().getPhone());
             holder.mTextOrderDetailFootName.setText(mDetailBean.getUser().getName());
             if(mDetailBean.getOrder().getDispatching().equals("1")){
+                int i=0;
+                for (int j=0;j<mDetailBean.getFoot().size();j++){
+                    OrderDetailBean.FootBean footBean = mDetailBean.getFoot().get(j);
+                    if(footBean.getDish_id().equals("2")){
+                        i++;
+                    }
+                }
+                holder.mConLayoutOrderDetailFootGive.setVisibility(View.VISIBLE);
+                holder.mButtonOrderDetailFootStartGive.setText("开始配送");
+                if(i==mDetailBean.getFoot().size()){
+                    holder.mButtonOrderDetailFootStartGive.setSelected(true);
+                }else {
+                    holder.mButtonOrderDetailFootStartGive.setSelected(false);
+                }
 
+            }else if(mDetailBean.getOrder().getDispatching().equals("2")){
+                holder.mButtonOrderDetailFootStartGive.setText("确认送达");
                 holder.mConLayoutOrderDetailFootGive.setVisibility(View.VISIBLE);
                 holder.mButtonOrderDetailFootStartGive.setSelected(true);
             }else {
                 holder.mConLayoutOrderDetailFootGive.setVisibility(View.GONE);
                 holder.mButtonOrderDetailFootStartGive.setSelected(false);
             }
+            if(mDetailBean.getOrder().getDispatching().equals("2")){
+                holder.mImageViewOrderFootPhone.setVisibility(View.VISIBLE);
+            }else {
+                holder.mImageViewOrderFootPhone.setVisibility(View.GONE);
+            }
             holder.mButtonOrderDetailFootStartGive.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(holder.mButtonOrderDetailFootStartGive.isSelected()){
-
+                        mInterface.onClickDistributionBtn(mDetailBean.getOrder().getDispatching());
                     }
+                }
+            });
+            holder.mImageViewOrderFootPhone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mInterface.onClickPhoneBtn(mDetailBean.getUser().getPhone());
                 }
             });
             return;
@@ -115,7 +141,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         OrderDetailBean.FootBean bean = mList.get(position);
         holder.mTextOrderDetailFootType.setText(mDetailBean.getOrder().getWicket());
         holder.mTextOrderDetailName.setText(bean.getDish());
-        if(bean.getDish_id().equals("1")){
+        if(bean.getDish_id().equals("2")){
             holder.mButtonOrderDetailItem.setSelected(false);
             holder.mButtonOrderDetailItem.setText("已取餐");
         }else {
@@ -126,7 +152,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             @Override
             public void onClick(View view) {
                 if(holder.mButtonOrderDetailItem.isSelected()){
-
+                    mInterface.onClickFootBtn(position);
                 }
             }
         });
@@ -151,6 +177,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         TextView mTextOrderDetailFootName;
         Button mButtonOrderDetailFootStartGive;
         ConstraintLayout mConLayoutOrderDetailFootGive;
+        ImageView mImageViewOrderFootPhone;
 
         //itemView
         Button mButtonOrderDetailItem;
@@ -172,6 +199,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
                 mTextOrderDetailFootName = (TextView)itemView.findViewById(R.id.text_orderDetail_foot_name) ;
                 mConLayoutOrderDetailFootGive = (ConstraintLayout)itemView.findViewById(R.id.conLayout_orderDetail_foot_give);
                 mButtonOrderDetailFootStartGive = (Button)itemView.findViewById(R.id.button_orderDetail_foot_startGive);
+                mImageViewOrderFootPhone = (ImageView)itemView.findViewById(R.id.image_orderFoot_phone);
                 return;
             }
 

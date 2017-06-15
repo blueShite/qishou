@@ -94,7 +94,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             holder.mTextOrderDetailFootName.setText(mDetailBean.getUser().getName());
             if(mDetailBean.getOrder().getDispatching().equals("1")){
                 int i=0;
-                for (int j=0;j<mDetailBean.getFoot().size();j++){
+                for (int j=1;j<mDetailBean.getFoot().size()-1;j++){
                     OrderDetailBean.FootBean footBean = mDetailBean.getFoot().get(j);
                     if(footBean.getDish_id().equals("2")){
                         i++;
@@ -102,7 +102,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
                 }
                 holder.mConLayoutOrderDetailFootGive.setVisibility(View.VISIBLE);
                 holder.mButtonOrderDetailFootStartGive.setText("开始配送");
-                if(i==mDetailBean.getFoot().size()){
+                if(i==mDetailBean.getFoot().size()-2){
                     holder.mButtonOrderDetailFootStartGive.setSelected(true);
                 }else {
                     holder.mButtonOrderDetailFootStartGive.setSelected(false);

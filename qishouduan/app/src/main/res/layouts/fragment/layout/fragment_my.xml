@@ -27,16 +27,15 @@
             android:textColor="@color/appwhite"
             android:textSize="@dimen/bigText" />
 
-        <TextView
-            android:id="@+id/text_my_online"
+        <ImageView
+            android:id="@+id/image_my_set"
             android:layout_width="50dp"
-            android:layout_height="match_parent"
+            android:layout_height="25dp"
             android:layout_gravity="right"
             android:layout_marginRight="10dp"
             android:gravity="center"
-            android:text="下线"
-            android:textColor="@color/appwhite"
-            android:textSize="@dimen/mainText" />
+            android:src="@drawable/nav_set"
+             />
 
     </android.support.v7.widget.Toolbar>
 
@@ -93,7 +92,6 @@
                             android:layout_alignTop="@+id/textView10" />
                         <TextView
                             android:id="@+id/text_today_order_price"
-                            android:text="呵呵"
                             android:textSize="@dimen/mainText"
                             android:textAlignment="center"
                             android:textColor="@color/ColorTextBlcak"
@@ -129,7 +127,6 @@
                              />
                         <TextView
                             android:id="@+id/text_order_today_num"
-                            android:text="呵呵"
                             android:textSize="@dimen/mainText"
                             android:textAlignment="center"
                             android:textColor="@color/ColorTextBlcak"
@@ -172,7 +169,6 @@
                             android:layout_alignTop="@+id/textView10" />
                         <TextView
                             android:id="@+id/text_order_week_price"
-                            android:text="呵呵"
                             android:textSize="@dimen/mainText"
                             android:textAlignment="center"
                             android:textColor="@color/ColorTextBlcak"
@@ -208,7 +204,6 @@
                             />
                         <TextView
                             android:id="@+id/text_order_week_num"
-                            android:text="呵呵"
                             android:textSize="@dimen/mainText"
                             android:textAlignment="center"
                             android:textColor="@color/ColorTextBlcak"
@@ -252,7 +247,6 @@
                             android:layout_alignTop="@+id/textView10" />
                         <TextView
                             android:id="@+id/text_order_mon_price"
-                            android:text="呵呵"
                             android:textSize="@dimen/mainText"
                             android:textAlignment="center"
                             android:textColor="@color/ColorTextBlcak"
@@ -289,7 +283,6 @@
                             />
                         <TextView
                             android:id="@+id/text_order_mon_num"
-                            android:text="呵呵"
                             android:textSize="@dimen/mainText"
                             android:textAlignment="center"
                             android:textColor="@color/ColorTextBlcak"

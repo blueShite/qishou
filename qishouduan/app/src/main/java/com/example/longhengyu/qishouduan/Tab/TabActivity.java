@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.example.longhengyu.qishouduan.My.MyFragment;
 import com.example.longhengyu.qishouduan.Order.OrderFragment;
 import com.example.longhengyu.qishouduan.R;
+import com.example.longhengyu.qishouduan.Tools.ActivityCollector;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -34,9 +35,17 @@ public class TabActivity extends SupportActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab);
+        ActivityCollector.addActivity(this);
         ButterKnife.bind(this);
         injectPages();
         initBottomBar();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
 
     private void injectPages() {

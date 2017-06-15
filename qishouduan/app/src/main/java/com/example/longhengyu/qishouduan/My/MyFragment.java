@@ -1,10 +1,12 @@
 package com.example.longhengyu.qishouduan.My;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ import com.example.longhengyu.qishouduan.My.Bean.MyBean;
 import com.example.longhengyu.qishouduan.My.Interface.MyInterface;
 import com.example.longhengyu.qishouduan.My.Presenter.MyPresenter;
 import com.example.longhengyu.qishouduan.R;
+import com.example.longhengyu.qishouduan.Set.SetActivity;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
@@ -29,8 +32,6 @@ import me.yokeyword.fragmentation.SupportFragment;
 
 public class MyFragment extends SupportFragment implements MyInterface {
 
-    @BindView(R.id.text_my_online)
-    TextView textMyOnline;
     @BindView(R.id.text_today_order_price)
     TextView textTodayOrderPrice;
     @BindView(R.id.text_order_today_num)
@@ -47,6 +48,8 @@ public class MyFragment extends SupportFragment implements MyInterface {
     TwinklingRefreshLayout myRefresh;
     @BindView(R.id.layout_My_onLine)
     RelativeLayout mLayoutMyOnLine;
+    @BindView(R.id.image_my_set)
+    ImageView mImageMySet;
 
 
     private View view;
@@ -74,10 +77,11 @@ public class MyFragment extends SupportFragment implements MyInterface {
 
     private void customView() {
         //定制刷新加载
-        textMyOnline.setOnClickListener(new View.OnClickListener() {
+        mImageMySet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mPresenter.requestSetOnline(personId,"2");
+                Intent intent = new Intent(getActivity(), SetActivity.class);
+                startActivity(intent);
             }
         });
         SinaRefreshView headerView = new SinaRefreshView(getContext());
@@ -99,10 +103,8 @@ public class MyFragment extends SupportFragment implements MyInterface {
         if (LoginManage.getInstance().getLoginBean().getWhether().equals("1")) {
             mPresenter.requestMyData(personId);
             mLayoutMyOnLine.setVisibility(View.GONE);
-            textMyOnline.setVisibility(View.VISIBLE);
         } else {
             mLayoutMyOnLine.setVisibility(View.VISIBLE);
-            textMyOnline.setVisibility(View.GONE);
         }
     }
 
@@ -135,10 +137,8 @@ public class MyFragment extends SupportFragment implements MyInterface {
         if (LoginManage.getInstance().getLoginBean().getWhether().equals("1")) {
             mPresenter.requestMyData(personId);
             mLayoutMyOnLine.setVisibility(View.GONE);
-            textMyOnline.setVisibility(View.VISIBLE);
         } else {
             mLayoutMyOnLine.setVisibility(View.VISIBLE);
-            textMyOnline.setVisibility(View.GONE);
         }
     }
 }

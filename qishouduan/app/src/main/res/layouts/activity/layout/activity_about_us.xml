@@ -28,7 +28,7 @@
             android:textColor="@color/appwhite"
             android:textSize="@dimen/bigText"/>
         <ImageView
-            android:id="@+id/imageView_set_back"
+            android:id="@+id/imageView_aboutUs_back"
             android:layout_gravity="left"
             android:layout_width="40dp"
             android:src="@drawable/nav_arrow"

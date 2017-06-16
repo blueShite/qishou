@@ -66,6 +66,8 @@ public class SetActivity extends BaseActivity {
                         }).show();
                 break;
             case R.id.relative_set_us:
+                Intent intent = new Intent(SetActivity.this,AboutUsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.relative_set_cache:
                 break;

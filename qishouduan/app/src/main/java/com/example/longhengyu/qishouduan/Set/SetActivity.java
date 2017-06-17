@@ -17,6 +17,7 @@ import com.example.longhengyu.qishouduan.R;
 import com.example.longhengyu.qishouduan.Tools.ActivityCollector;
 import com.example.longhengyu.qishouduan.Tools.Common.utils.ABL_AlertDialog;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ public class SetActivity extends BaseActivity {
     TextView mTextSetCache;
     @BindView(R.id.text_set_setOnline)
     TextView mTextSetSetOnline;
+
     private String[] onlineArray = new String[]{"在线", "离线"};
 
     @Override
@@ -41,13 +43,16 @@ public class SetActivity extends BaseActivity {
         setContentView(R.layout.activity_set);
         ButterKnife.bind(this);
         initView();
+
     }
 
-    private void initView() {
+    private void initView(){
 
         String string = LoginManage.getInstance().getLoginBean().getWhether();
         int index = Integer.parseInt(string) - 1;
         mTextSetSetOnline.setText(onlineArray[index]);
+        mTextSetCache.setText("0.0M");
+
     }
 
     @OnClick({R.id.relative_set_online, R.id.relative_set_us, R.id.relative_set_cache, R.id.button_set_logout})

@@ -2,16 +2,14 @@
 <tabs>
 
     <tab
-        activeColor="#F6564A"
-        icon="@drawable/select_home_tab"
+        icon="@drawable/tab_order_inactive"
         id="@+id/tab_home"
-        inActiveColor="#616161"
+        barColorWhenSelected="F6564A"
         title="订单"/>
     <tab
-        activeColor="#F6564A"
-        icon="@drawable/select_center_tab"
+        icon="@drawable/tab_info_inactive"
         id="@+id/tab_personal_center"
-        inActiveColor="#616161"
+        barColorWhenSelected="F6564A"
         title="我的"/>
 
 </tabs>

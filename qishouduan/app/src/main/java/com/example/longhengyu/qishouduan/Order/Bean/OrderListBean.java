@@ -20,6 +20,15 @@ public class OrderListBean {
     private String diner_time;
     private int orderType;
     private String delivery;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getDelivery() {
         return delivery;

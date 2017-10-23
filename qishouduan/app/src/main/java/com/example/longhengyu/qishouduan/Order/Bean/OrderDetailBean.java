@@ -143,6 +143,15 @@ public class OrderDetailBean {
 
         private String dish_id;
         private String dish;
+        private String num;
+
+        public String getNum() {
+            return num;
+        }
+
+        public void setNum(String num) {
+            this.num = num;
+        }
 
         public String getDish_id() {
             return dish_id;

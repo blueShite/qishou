@@ -13,6 +13,7 @@ import com.example.longhengyu.qishouduan.Manage.LoginManage;
 import com.example.longhengyu.qishouduan.NetWorks.RequestBean;
 import com.example.longhengyu.qishouduan.NetWorks.RequestCallBack;
 import com.example.longhengyu.qishouduan.NetWorks.RequestTools;
+import com.example.longhengyu.qishouduan.PushAbout.TagAliasOperatorHelper;
 import com.example.longhengyu.qishouduan.R;
 import com.example.longhengyu.qishouduan.Tools.ActivityCollector;
 import com.example.longhengyu.qishouduan.Tools.Common.utils.ABL_AlertDialog;
@@ -26,6 +27,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 import okhttp3.Call;
+
+import static com.example.longhengyu.qishouduan.PushAbout.TagAliasOperatorHelper.sequence;
 
 public class SetActivity extends BaseActivity {
 
@@ -95,6 +98,12 @@ public class SetActivity extends BaseActivity {
                 .setPositiveButton("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        TagAliasOperatorHelper.TagAliasBean tagAliasBean = new TagAliasOperatorHelper.TagAliasBean();
+                        tagAliasBean.setAction(3);
+                        tagAliasBean.setAlias(LoginManage.getInstance().getLoginBean().getId());
+                        tagAliasBean.setAliasAction(true);
+                        sequence++;
+                        TagAliasOperatorHelper.getInstance().handleAction(SetActivity.this,sequence,tagAliasBean);
                         Intent intent = new Intent(SetActivity.this, LoginActivity.class);
                         startActivity(intent);
                         LoginManage.getInstance().saveLoginBean(null);
@@ -125,6 +134,21 @@ public class SetActivity extends BaseActivity {
                 super.onResponse(response, id);
                 if (response.isRes()) {
                     LoginManage.getInstance().getLoginBean().setWhether(whether);
+                    if(LoginManage.getInstance().getLoginBean().getWhether().equals("1")){
+                        TagAliasOperatorHelper.TagAliasBean tagAliasBean = new TagAliasOperatorHelper.TagAliasBean();
+                        tagAliasBean.setAction(2);
+                        tagAliasBean.setAlias(LoginManage.getInstance().getLoginBean().getId());
+                        tagAliasBean.setAliasAction(true);
+                        sequence++;
+                        TagAliasOperatorHelper.getInstance().handleAction(SetActivity.this,sequence,tagAliasBean);
+                    }else {
+                        TagAliasOperatorHelper.TagAliasBean tagAliasBean = new TagAliasOperatorHelper.TagAliasBean();
+                        tagAliasBean.setAction(3);
+                        tagAliasBean.setAlias(LoginManage.getInstance().getLoginBean().getId());
+                        tagAliasBean.setAliasAction(true);
+                        sequence++;
+                        TagAliasOperatorHelper.getInstance().handleAction(SetActivity.this,sequence,tagAliasBean);
+                    }
                     int index = Integer.parseInt(LoginManage.getInstance().getLoginBean().getWhether()) - 1;
                     mTextSetSetOnline.setText(onlineArray[index]);
                 } else {

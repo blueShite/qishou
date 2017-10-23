@@ -19,6 +19,7 @@ import com.example.longhengyu.qishouduan.Order.Adapter.OrderAdapter;
 import com.example.longhengyu.qishouduan.Order.Bean.OrderListBean;
 import com.example.longhengyu.qishouduan.Order.Interface.OrderListInterface;
 import com.example.longhengyu.qishouduan.Order.Presenter.OrderListPresenter;
+import com.example.longhengyu.qishouduan.PushAbout.TagAliasOperatorHelper;
 import com.example.longhengyu.qishouduan.R;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
@@ -32,6 +33,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.yokeyword.fragmentation.SupportFragment;
+
+import static com.example.longhengyu.qishouduan.PushAbout.TagAliasOperatorHelper.sequence;
 
 /**
  * Created by yuanwuji on 2017/6/5.
@@ -224,9 +227,21 @@ public class OrderFragment extends SupportFragment implements OrderListInterface
             mPresenter.requestOrderList(personId, orderTypeStr);
             mLayoutOrderOnLine.setVisibility(View.GONE);
             mTextOrderOnline.setVisibility(View.VISIBLE);
+            TagAliasOperatorHelper.TagAliasBean tagAliasBean = new TagAliasOperatorHelper.TagAliasBean();
+            tagAliasBean.setAction(2);
+            tagAliasBean.setAlias(LoginManage.getInstance().getLoginBean().getId());
+            tagAliasBean.setAliasAction(true);
+            sequence++;
+            TagAliasOperatorHelper.getInstance().handleAction(getContext(),sequence,tagAliasBean);
         } else {
             mLayoutOrderOnLine.setVisibility(View.VISIBLE);
             mTextOrderOnline.setVisibility(View.GONE);
+            TagAliasOperatorHelper.TagAliasBean tagAliasBean = new TagAliasOperatorHelper.TagAliasBean();
+            tagAliasBean.setAction(3);
+            tagAliasBean.setAlias(LoginManage.getInstance().getLoginBean().getId());
+            tagAliasBean.setAliasAction(true);
+            sequence++;
+            TagAliasOperatorHelper.getInstance().handleAction(getContext(),sequence,tagAliasBean);
         }
     }
 }

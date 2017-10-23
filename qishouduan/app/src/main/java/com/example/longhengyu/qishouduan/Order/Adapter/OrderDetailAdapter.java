@@ -140,7 +140,11 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
 
         OrderDetailBean.FootBean bean = mList.get(position);
         holder.mTextOrderDetailFootType.setText(mDetailBean.getOrder().getWicket());
-        holder.mTextOrderDetailName.setText(bean.getDish());
+        if(bean.getNum()!=null&&bean.getNum().length()>0){
+            holder.mTextOrderDetailName.setText(bean.getDish()+bean.getNum()+"份");
+        }else {
+            holder.mTextOrderDetailName.setText(bean.getDish());
+        }
         if(bean.getDish_id().equals("2")){
             holder.mButtonOrderDetailItem.setSelected(false);
             holder.mButtonOrderDetailItem.setText("已取餐");

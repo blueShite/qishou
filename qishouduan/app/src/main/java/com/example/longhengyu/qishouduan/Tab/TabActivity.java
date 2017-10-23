@@ -1,13 +1,22 @@
 package com.example.longhengyu.qishouduan.Tab;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.example.longhengyu.qishouduan.Manage.LoginManage;
 import com.example.longhengyu.qishouduan.My.MyFragment;
 import com.example.longhengyu.qishouduan.Order.OrderFragment;
+import com.example.longhengyu.qishouduan.PushAbout.ExampleUtil;
+import com.example.longhengyu.qishouduan.PushAbout.LocalBroadcastManager;
+import com.example.longhengyu.qishouduan.PushAbout.TagAliasOperatorHelper;
 import com.example.longhengyu.qishouduan.R;
 import com.example.longhengyu.qishouduan.Tools.ActivityCollector;
 import com.roughike.bottombar.BottomBar;
@@ -16,7 +25,10 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.jpush.android.api.JPushInterface;
 import me.yokeyword.fragmentation.SupportActivity;
+
+import static com.example.longhengyu.qishouduan.PushAbout.TagAliasOperatorHelper.sequence;
 
 public class TabActivity extends SupportActivity {
 
@@ -29,6 +41,7 @@ public class TabActivity extends SupportActivity {
     private MyFragment myFragment;
 
     private long m_exitTime = 1;
+    public static boolean isForeground = false;
 
 
     @Override
@@ -37,9 +50,19 @@ public class TabActivity extends SupportActivity {
         setContentView(R.layout.activity_tab);
         ActivityCollector.addActivity(this);
         ButterKnife.bind(this);
+        JPushInterface.init(getApplicationContext());
         injectPages();
         initBottomBar();
 
+    }
+
+    private void setAlias(){
+        TagAliasOperatorHelper.TagAliasBean tagAliasBean = new TagAliasOperatorHelper.TagAliasBean();
+        tagAliasBean.setAction(2);
+        tagAliasBean.setAlias(LoginManage.getInstance().getLoginBean().getId());
+        tagAliasBean.setAliasAction(true);
+        sequence++;
+        TagAliasOperatorHelper.getInstance().handleAction(getApplicationContext(),sequence,tagAliasBean);
     }
 
     @Override
@@ -48,16 +71,19 @@ public class TabActivity extends SupportActivity {
         ActivityCollector.removeActivity(this);
     }
 
-    private void injectPages() {
+    @Override
+    protected void onResume() {
+        isForeground = true;
+        super.onResume();
+    }
 
-        /*orderFragment = findFragment(OrderFragment.class);
-        if(orderFragment==null){
-            orderFragment = OrderFragment.newInstance();
-        }
-        myFragment = findFragment(MyFragment.class);
-        if(myFragment==null){
-            myFragment = MyFragment.newInstance();
-        }*/
+    @Override
+    protected void onPause() {
+        isForeground = false;
+        super.onPause();
+    }
+
+    private void injectPages() {
         orderFragment = OrderFragment.newInstance();
         myFragment = MyFragment.newInstance();
         loadMultipleRootFragment(R.id.contentView,0,orderFragment,myFragment);
@@ -89,6 +115,40 @@ public class TabActivity extends SupportActivity {
                 }
             }
         });
+    }
+
+    private MessageReceiver mMessageReceiver;
+    public static final String MESSAGE_RECEIVED_ACTION = "com.example.longhengyu.qishouduan.MESSAGE_RECEIVED_ACTION";
+    public static final String KEY_TITLE = "title";
+    public static final String KEY_MESSAGE = "message";
+    public static final String KEY_EXTRAS = "extras";
+
+    public void registerMessageReceiver() {
+        mMessageReceiver = new MessageReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        filter.addAction(MESSAGE_RECEIVED_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, filter);
+    }
+
+    public class MessageReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
+                    String messge = intent.getStringExtra(KEY_MESSAGE);
+                    String extras = intent.getStringExtra(KEY_EXTRAS);
+                    StringBuilder showMsg = new StringBuilder();
+                    showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
+                    if (!ExampleUtil.isEmpty(extras)) {
+                        showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
+                    }
+                    Log.e("tabActivity",showMsg.toString());
+                }
+            } catch (Exception e){
+            }
+        }
     }
 
     @Override
